@@ -44,6 +44,11 @@ h1 {
   letter-spacing:1px;
 }
 
+#ingress {
+  font-size:1.1em;
+  letter-spacing:0.9px;
+}
+
 #games {
   margin:0 0;
 }
