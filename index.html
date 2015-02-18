@@ -14,22 +14,23 @@
     <li><a class="selected" href="index.html">Flappy Bird</a></li><li><a href="speedrunners.html">Speedrunners</a></li><li><a href="skate-3.html">Skate 3</a></li><li><a href="whack-your-ex.html">Whack Your Ex</a></li>
   </ul>
 </div>
-
 <svg></svg>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var margin = {top: 80, right: 40, bottom: 80, left: 40},
+var margin = {top: 80, right: 40, bottom: 80, left: 80},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%d-%b-%y").parse;
 
+var padding = 100;
+
 // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
 var x = d3.time.scale().range([0, width]),
     y = d3.scale.linear().range([height, 0]),
     xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true),
-    yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
+    yAxis = d3.svg.axis().scale(y).ticks(4).orient("left");
 
 
 // An area generator, for the light fill.
@@ -98,17 +99,16 @@ d3.csv("flappybirddata.csv", type, function(error, data) {
   // Add the y-axis.
   svg.append("g")
       .attr("class", "y axis")
-      .attr("transform", "translate(" + width + ",0)")
       .call(yAxis);
-/*
+
       svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left)
         .attr("x",0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Interest (Google)*");
-*/
+        .text("Popularity, Google Trends*");
+
 
   var colors = d3.scale.category10();
   svg.selectAll('.line')
@@ -149,18 +149,27 @@ svg.append("text")
     .attr('fill', '#BC4676')
     .attr('stroke-width', 1)
     .attr('class', 'guide')
-    .attr('cx', 440)
+    .attr('cx', 403)
     .attr('cy',10)
     .attr('r',7)
     .append("svg:title")
     .text("test")
 
   var pewplay = svg.append('text')
-    .attr('x', 440)
+    .attr('x', 403)
     .attr('y', -8)
     .attr('text-anchor','middle')
     .attr('font-size','1.2em')
     .text("Pewdiepie plays game")
+
+ /* var yLabel =svg.append('text')
+    .attr('x', 860)
+    .attr('y', 10)
+    .attr('text-anchor','middle')
+    .attr('font-size','1.2em')
+    .text("Popularity (Google Trends*)")
+    .attr('transform', 'rotate(90)')
+
 
 
   /* Create a shared transition for anything we're animating */
@@ -186,10 +195,6 @@ function type(d) {
 
 
 </script>
-<div id="description1">
-  <p>Popularity</p>
-  <p>(Google Trends*)</p>
-  </div>
   <div id="description">
   <p>"Flappy Bird" was released in May 2013. Pewdiepie played it on January 27th 2014.</p>
   <p><p>*Data from Google Trends Graphs, showing the popularity for the term "Flappy Bird" over time. The numbers on the graph reflect how many searches have been done for the term, relative to the total number of Google searches over time. They don't represent absolute search volume numbers. Read more about Trends Graphs <a href="https://support.google.com/trends/answer/4355164?hl=en&rd=1">here</a>.</p></p>

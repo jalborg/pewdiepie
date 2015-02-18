@@ -18,7 +18,7 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var margin = {top: 80, right: 40, bottom: 80, left: 40},
+var margin = {top: 80, right: 40, bottom: 80, left: 80},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -28,7 +28,7 @@ var parseDate = d3.time.format("%d-%b-%y").parse;
 var x = d3.time.scale().range([0, width]),
     y = d3.scale.linear().range([height, 0]),
     xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true),
-    yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
+    yAxis = d3.svg.axis().scale(y).ticks(4).orient("left");
 
 
 // An area generator, for the light fill.
@@ -97,17 +97,16 @@ d3.csv("skate3data.csv", type, function(error, data) {
   // Add the y-axis.
   svg.append("g")
       .attr("class", "y axis")
-      .attr("transform", "translate(" + width + ",0)")
       .call(yAxis);
-/*
+
       svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left)
         .attr("x",0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Interest (Google)*");
-*/
+        .text("Popularity, Google Trends");
+
 
   var colors = d3.scale.category10();
   svg.selectAll('.line')
@@ -148,14 +147,14 @@ svg.append("text")
     .attr('fill', '#BC4676')
     .attr('stroke-width', 1)
     .attr('class', 'guide')
-    .attr('cx', 741)
+    .attr('cx', 706)
     .attr('cy',120)
     .attr('r',7)
     .append("svg:title")
     .text("test")
 
   var pewplay = svg.append('text')
-    .attr('x', 741)
+    .attr('x', 706)
     .attr('y', 100)
     .attr('text-anchor','middle')
     .attr('font-size','1.2em')
@@ -185,11 +184,6 @@ function type(d) {
 
 
 </script>
-<div id="description1">
-  <p>Popularity</p>
-  <p>(Google Trends*)</p>
-  </div>
-  <div id="description">
   <p>"Skate 3" was released in 2010. Pewdiepie played it almost four years later, on January 7th 2014.</p>
   <p><p>*Data from Google Trends Graphs, showing the popularity for the term "Skate 3" over time. The numbers on the graph reflect how many searches have been done for the term, relative to the total number of Google searches over time. They don't represent absolute search volume numbers. Read more about Trends Graphs <a href="https://support.google.com/trends/answer/4355164?hl=en&rd=1">here</a>.</p></p>
   </div>
