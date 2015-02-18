@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Pontano+Sans" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="style.css">
+<title>YouTube star Pewdiepie makes video games go viral</title>
+
+<body>
+<h1>YouTube star Pewdiepie makes video games go viral</h1>
+
+<div id="games">
+  <ul>
+    <li><a class="selected" href="index.html">Flappy Bird</a></li><li><a href="speedrunners.html">Speedrunners</a></li><li><a href="skate-3.html">Skate 3</a></li><li><a href="whack-your-ex.html">Whack Your Ex</a></li>
+  </ul>
+</div>
+
+<svg></svg>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var margin = {top: 80, right: 40, bottom: 80, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format("%d-%b-%y").parse;
+
+// Scales and axes. Note the inverted domain for the y-scale: bigger is up!
+var x = d3.time.scale().range([0, width]),
+    y = d3.scale.linear().range([height, 0]),
+    xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true),
+    yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
+
+
+// An area generator, for the light fill.
+var area = d3.svg.area()
+    .interpolate("monotone")
+    .x(function(d) { return x(d.date); })
+    .y0(height)
+    .y1(function(d) { return y(d.trending); });
+
+// A line generator, for the dark stroke.
+var line = d3.svg.line()
+    .interpolate("monotone")
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.trending); });
+
+
+d3.csv("flappybirddata.csv", type, function(error, data) {
+
+  // Filter to one symbol; the S&P 500.
+  var values = data.filter(function(d) {
+    return d.symbol == "AMZN";;
+  });
+
+
+  var msft = data.filter(function(d) {
+    return d.symbol == "MSFT";
+  });
+
+  var ibm = data.filter(function(d) {
+    return d.symbol == 'IBM';
+  });
+
+  // Compute the minimum and maximum date, and the maximum price.
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain(d3.extent(data, function(d) { return d.trending; }));
+
+  // Add an SVG element with the desired dimensions and margin.
+  var svg = d3.select("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+
+  // Add the clip path.
+  svg.append("clipPath")
+      .attr("id", "clip")
+    .append("rect")
+      .attr("width", width)
+      .attr("height", height);
+
+  // Add the x-axis.
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+
+      .call(xAxis)
+      .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", function(d) {
+                return "rotate(-90)" 
+                });
+
+  // Add the y-axis.
+  svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + width + ",0)")
+      .call(yAxis);
+/*
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Interest (Google)*");
+*/
+
+  var colors = d3.scale.category10();
+  svg.selectAll('.line')
+    .data([values])
+    .enter()
+      .append('path')
+        .attr('class', 'line')
+        .style('stroke', function(d) {
+          return colors(Math.random() * 50);
+        })
+        .attr('clip-path', 'url(#clip)')
+        .attr('d', function(d) {
+          return line(d);
+        })
+/*
+
+svg.append("text")
+      .attr("x", 50)
+        function(d) { return values[0].date})
+      .attr("y", 40)
+      .attr('text-anchor','middle')
+      .text("Pewdiepie plays game")
+*/
+  
+
+  /* Add 'curtain' rectangle to hide entire graph */
+  var curtain = svg.append('rect')
+    .attr('x', -1 * width)
+    .attr('y', -1 * height)
+    .attr('height', height)
+    .attr('width', width)
+    .attr('class', 'curtain')
+    .attr('transform', 'rotate(180)')
+    .style('fill', '#ffffff')
+
+  /* Optionally add a guideline */
+  var guideline = svg.append('circle')
+    .attr('fill', '#BC4676')
+    .attr('stroke-width', 1)
+    .attr('class', 'guide')
+    .attr('cx', 440)
+    .attr('cy',10)
+    .attr('r',7)
+    .append("svg:title")
+    .text("test")
+
+  var pewplay = svg.append('text')
+    .attr('x', 440)
+    .attr('y', -8)
+    .attr('text-anchor','middle')
+    .attr('font-size','1.2em')
+    .text("Pewdiepie plays game")
+
+
+  /* Create a shared transition for anything we're animating */
+  var t = svg.transition()
+    .delay(1000)
+    .duration(6000)
+    .ease('linear')
+
+  t.select('rect.curtain')
+    .attr('width', 0);
+
+
+});
+
+// Parse dates and numbers. We assume values are sorted by date.
+function type(d) {
+  d.date = parseDate(d.date);
+  d.trending = +d.trending;
+  return d;
+}
+
+
+
+
+</script>
+<div id="description1">
+  <p>Popularity</p>
+  <p>(Google Trends*)</p>
+  </div>
+  <div id="description">
+  <p>"Flappy Bird" was released in May 2013. Pewdiepie played it on January 27th 2014.</p>
+  <p><p>*Data from Google Trends Graphs, showing the popularity for the term "Flappy Bird" over time. The numbers on the graph reflect how many searches have been done for the term, relative to the total number of Google searches over time. They don't represent absolute search volume numbers. Read more about Trends Graphs <a href="https://support.google.com/trends/answer/4355164?hl=en&rd=1">here</a>.</p></p>
+  </div>
+</body>
+</html>
