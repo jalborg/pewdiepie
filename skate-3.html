@@ -153,12 +153,29 @@ svg.append("text")
     .append("svg:title")
     .text("test")
 
+  var releasecircle = svg.append('circle')
+    .attr('fill', '#BC4676')
+    .attr('stroke-width', 1)
+    .attr('class', 'guide')
+    .attr('cx', 67)
+    .attr('cy',120)
+    .attr('r',7)
+    .append("svg:title")
+    .text("test")
+
   var pewplay = svg.append('text')
     .attr('x', 706)
     .attr('y', 100)
     .attr('text-anchor','middle')
     .attr('font-size','1.2em')
     .text("Pewdiepie plays game")
+
+  var release = svg.append('text')
+    .attr('x', 67
+    .attr('y', 100)
+    .attr('text-anchor','middle')
+    .attr('font-size','1.2em')
+    .text("The game is released")
 
 
   /* Create a shared transition for anything we're animating */
